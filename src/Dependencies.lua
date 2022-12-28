@@ -27,6 +27,9 @@ require 'src/LevelMaker'
 -- the rectangular entity the player controls, which deflects the ball
 require 'src/Paddle'
 
+-- A powerup that will randomly appear when a brick is destroyed
+require 'src/Powerup'
+
 -- a basic StateMachine class which will allow us to transition to and from
 -- game states smoothly and avoid monolithic code in one file
 require 'src/StateMachine'
