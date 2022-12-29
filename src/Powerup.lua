@@ -17,12 +17,12 @@ function Powerup:init(brick_x, brick_y, skin)
     self.x = brick_x + 8
     self.y = brick_y
 
-    self.dy = math.random(50,90)
+    self.dy = math.random(32,64)
 
     self.width = 16
     self.height = 16
 
-    self.skin = math.random(1,10)
+    self.skin = skin
 end
 
 function Powerup:update(dt)
