@@ -41,7 +41,8 @@ function VictoryState:update(dt)
             score = self.score,
             highScores = self.highScores,
             recoverPoints = self.recoverPoints,
-            growScore = self.growScore
+            growScore = self.growScore,
+            gotkey = false
         })
     end
 end

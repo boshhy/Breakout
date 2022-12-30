@@ -31,6 +31,7 @@ function PlayState:enter(params)
     self.countBalls = 1
     self.level = params.level
     self.powerups = {}
+    self.gotkey = params.gotkey
 
     self.recoverPoints = params.recoverPoints
     self.growPoints = 2000
@@ -110,6 +111,11 @@ function PlayState:update(dt)
                     else
                         brick:hit()
                     end
+                elseif self.gotkey and brick.green then
+                    brick:unlocked()
+                    brick:hit()
+                    brick.green = false
+                    brick.isLocked = false
                 else
                     brick:hit()
                 end
@@ -212,8 +218,12 @@ function PlayState:update(dt)
                 self.countBalls = self.countBalls + 2
                 table.remove(self.powerups, k)
             else
+                self.gotkey = true
                 for k, brick in pairs(self.bricks) do
-                    brick.isLocked = false
+                    if not brick.green and brick.isLocked then
+                        brick:unlocked()
+                    end
+                    brick.green = true
                 end
                 table.remove(self.powerups, k)
             end
@@ -246,7 +256,8 @@ function PlayState:update(dt)
                         highScores = self.highScores,
                         level = self.level,
                         recoverPoints = self.recoverPoints,
-                        growScore = self.growScore
+                        growScore = self.growScore,
+                        gotkey = self.gotkey
                     })
                 end
             end
@@ -318,7 +329,7 @@ function PlayState:updateGrowScore()
         self.growScore = 0
         self.paddle:grow()
     elseif left <= 0 then
-        self.growPoints = math.floor(points * 1.25) - math.floor(points * 1.25) % 5
+        self.growPoints = math.floor(self.growPoints * 1.25) - math.floor(self.growPoints * 1.25) % 5
         self.growScore = 0
     end
 end

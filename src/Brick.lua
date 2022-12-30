@@ -64,6 +64,7 @@ function Brick:init(x, y)
     self.inPlay = true
 
     self.isLocked = false
+    self.green = false
 
     -- particle system belonging to the brick, emitted on hit
     self.psystem = love.graphics.newParticleSystem(gTextures['particle'], 64)
@@ -137,14 +138,30 @@ function Brick:hit()
     end
 end
 
+function Brick:unlocked()
+    self.psystem:setColors(
+            paletteColors[self.color].r / 255,
+            paletteColors[self.color].g / 255,
+            paletteColors[self.color].b / 255,
+            55 * (self.tier + 1) / 255,
+            paletteColors[self.color].r / 255,
+            paletteColors[self.color].g / 255,
+            paletteColors[self.color].b / 255,
+            0
+        )
+        self.psystem:emit(64)
+end
+
 function Brick:update(dt)
     self.psystem:update(dt)
 end
 
 function Brick:render()
     if self.inPlay then
-        if self.isLocked then
-            love.graphics.draw(gTextures['main'], gFrames['lockedBrick'], self.x, self.y)
+        if self.isLocked and not self.green then
+            love.graphics.draw(gTextures['main'], gFrames['lockedBrick'][1], self.x, self.y)
+        elseif self.isLocked and self.green then
+            love.graphics.draw(gTextures['main'], gFrames['lockedBrick'][2], self.x, self.y)
         else
             love.graphics.draw(gTextures['main'], 
                 -- multiply color by 4 (-1) to get our color offset, then add tier to that

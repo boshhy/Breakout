@@ -59,7 +59,10 @@ function GenerateQuadsBricks(atlas)
 end
 
 function GenerateQuadsLockedBrick(atlas)
-    return love.graphics.newQuad(160, 48, 32, 16, atlas:getDimensions())
+    local quads = {}
+    quads[1] = love.graphics.newQuad(128, 80, 32, 16, atlas:getDimensions())
+    quads[2] = love.graphics.newQuad(160,80, 32,16, atlas:getDimensions())
+    return quads
 end
 
 --[[
