@@ -93,19 +93,24 @@ function PlayState:update(dt)
 
             -- only check collision if we're in play
             if brick.inPlay and ball:collides(brick) then
+                if not brick.isLocked then
+                    self.growScore = self.growScore + (brick.tier * 200 + brick.color * 25)
+                    -- add to score
+                    self.score = self.score + (brick.tier * 200 + brick.color * 25)
 
-                self.growScore = self.growScore + (brick.tier * 200 + brick.color * 25)
-                -- add to score
-                self.score = self.score + (brick.tier * 200 + brick.color * 25)
-
-                -- trigger the brick's hit function, which removes it from play
-                --if brick.tier == 0 and brick.color == 1 then
-                x = math.random(10)
-                if x == 1 then
-                    brick:hit()
-                    table.insert(self.powerups, Powerup(brick.x, brick.y, 1))
+                    -- trigger the brick's hit function, which removes it from play
+                    --if brick.tier == 0 and brick.color == 1 then
+                    x = math.random(10)
+                    if x == 1 then
+                        brick:hit()
+                        table.insert(self.powerups, Powerup(brick.x, brick.y, 1))
+                    elseif x == 2 then
+                        brick:hit()
+                        table.insert(self.powerups, Powerup(brick.x, brick.y, 2))
+                    else
+                        brick:hit()
+                    end
                 else
-                --else
                     brick:hit()
                 end
 
@@ -195,16 +200,23 @@ function PlayState:update(dt)
         if power:collides(self.paddle) then
             -- TODO fix this
             -- Need to do this randomly
-            for i = 1, 2 do
-                b = Ball(math.random(1, 7))
-                b.x = power.x + power.width/2 - 4
-                b.y = self.paddle.y - 8
-                b.dx = math.random(-200, 200)
-                b.dy = math.random(-50, -60)
-                table.insert(self.balls, b)
+            if power.skin == 1 then
+                for i = 1, 2 do
+                    b = Ball(math.random(1, 7))
+                    b.x = power.x + power.width/2 - 4
+                    b.y = self.paddle.y - 8
+                    b.dx = math.random(-200, 200)
+                    b.dy = math.random(-50, -60)
+                    table.insert(self.balls, b)
+                end
+                self.countBalls = self.countBalls + 2
+                table.remove(self.powerups, k)
+            else
+                for k, brick in pairs(self.bricks) do
+                    brick.isLocked = false
+                end
+                table.remove(self.powerups, k)
             end
-            self.countBalls = self.countBalls + 2
-            table.remove(self.powerups, k)
         end
     end
     -- if ball goes below bounds, revert to serve state and decrease health

@@ -112,6 +112,10 @@ function LevelMaker.createMap(level)
                 b.tier = solidTier
             end 
 
+            if math.random(10) == 1 then
+                b.isLocked = true
+            end
+
             table.insert(bricks, b)
 
             -- Lua's version of the 'continue' statement
