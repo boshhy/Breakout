@@ -32,7 +32,9 @@ function PlayState:enter(params)
     self.level = params.level
     self.powerups = {}
 
-    self.recoverPoints = params.score + 5000
+    self.recoverPoints = params.recoverPoints
+    self.growPoints = 2000
+    self.growScore = params.growScore
 
     -- give ball random starting velocity
     self.balls[1].dx = math.random(-200, 200)
@@ -92,6 +94,7 @@ function PlayState:update(dt)
             -- only check collision if we're in play
             if brick.inPlay and ball:collides(brick) then
 
+                self.growScore = self.growScore + (brick.tier * 200 + brick.color * 25)
                 -- add to score
                 self.score = self.score + (brick.tier * 200 + brick.color * 25)
 
@@ -105,6 +108,8 @@ function PlayState:update(dt)
                 --else
                     brick:hit()
                 end
+
+                self:updateGrowScore()
                 
 
                 -- if we have enough points, recover a point of health
@@ -117,9 +122,6 @@ function PlayState:update(dt)
 
                     -- play recover sound effect
                     gSounds['recover']:play()
-                    if self.paddle.size < 4 then
-                        self.paddle:grow()
-                    end
                 end
 
                 -- go to our victory screen if there are no more bricks left
@@ -133,7 +135,8 @@ function PlayState:update(dt)
                         score = self.score,
                         highScores = self.highScores,
                         ball = ball,
-                        recoverPoints = self.recoverPoints
+                        recoverPoints = self.recoverPoints,
+                        growScore = self.growScore
                     })
                 end
 
@@ -230,7 +233,8 @@ function PlayState:update(dt)
                         score = self.score,
                         highScores = self.highScores,
                         level = self.level,
-                        recoverPoints = self.recoverPoints
+                        recoverPoints = self.recoverPoints,
+                        growScore = self.growScore
                     })
                 end
             end
@@ -269,6 +273,7 @@ function PlayState:render()
 
     renderScore(self.score)
     renderHealth(self.health)
+    self:renderGrowScore()
 
     -- pause text, if paused
     if self.paused then
@@ -285,4 +290,23 @@ function PlayState:checkVictory()
     end
 
     return true
+end
+
+function PlayState:renderGrowScore()
+    left = self.growPoints - self.growScore
+    love.graphics.setFont(gFonts['small'])
+    love.graphics.print('Points left to grow:', 212, 5)
+    love.graphics.printf(tostring(left), 280, 5, 40, 'right')
+end
+
+function PlayState:updateGrowScore()
+    left = self.growPoints - self.growScore
+    if left <= 0 and self.paddle.size < 4 then
+        self.growPoints = math.floor(self.growPoints * 1.25) - math.floor(self.growPoints * 1.25) % 5
+        self.growScore = 0
+        self.paddle:grow()
+    elseif left <= 0 then
+        self.growPoints = math.floor(points * 1.25) - math.floor(points * 1.25) % 5
+        self.growScore = 0
+    end
 end
