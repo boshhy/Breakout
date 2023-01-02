@@ -133,24 +133,28 @@ function Brick:hit()
         end
     else
         -- TODO add locked hit sound
-        gSounds['brick-hit-2']:stop()
-        gSounds['brick-hit-2']:play()
+        gSounds['brick-locked-hit']:stop()
+        gSounds['brick-locked-hit']:play()
     end
 end
 
 function Brick:unlocked()
-    self.psystem:setColors(
-            paletteColors[self.color].r / 255,
-            paletteColors[self.color].g / 255,
-            paletteColors[self.color].b / 255,
-            55 * (self.tier + 1) / 255,
-            paletteColors[self.color].r / 255,
-            paletteColors[self.color].g / 255,
-            paletteColors[self.color].b / 255,
-            0
-        )
-        self.psystem:emit(64)
+    self.psystem:setColors(0/255, 255/255, 0/255, 
+    25/255, 
+    0/255, 255/255, 0/255, 0
+    )
+    self.psystem:emit(64)
+
 end
+
+function Brick:unlockSingle()
+    self.psystem:setColors(0/255, 255/255, 0/255, 
+    50/255, 
+    0/255, 255/255, 0/255, 0
+    )
+    self.psystem:emit(64)
+end
+
 
 function Brick:update(dt)
     self.psystem:update(dt)

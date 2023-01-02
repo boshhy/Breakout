@@ -75,7 +75,7 @@ function love.load()
     -- actual window no matter its dimensions
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         vsync = true,
-        fullscreen = true,
+        fullscreen = false,
         resizable = true
     })
 
@@ -95,6 +95,11 @@ function love.load()
         ['recover'] = love.audio.newSource('sounds/recover.wav', 'static'),
         ['high-score'] = love.audio.newSource('sounds/high_score.wav', 'static'),
         ['pause'] = love.audio.newSource('sounds/pause.wav', 'static'),
+        ['powerup-multi'] = love.audio.newSource('sounds/power-multi.wav', 'static'),
+        ['powerup-unlocked'] = love.audio.newSource('sounds/power-unlocked.wav', 'static'),
+        ['brick-hit-unlocked'] = love.audio.newSource('sounds/brick-hit-unlocked.wav', 'static'),
+        ['brick-locked-hit'] = love.audio.newSource('sounds/brick-locked-hit.wav', 'static'),
+        ['paddle-grow'] = love.audio.newSource('sounds/paddle-grow.wav', 'static'),
 
         ['music'] = love.audio.newSource('sounds/music.wav', 'static')
     }

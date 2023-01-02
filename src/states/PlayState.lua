@@ -101,7 +101,7 @@ function PlayState:update(dt)
 
                     -- trigger the brick's hit function, which removes it from play
                     --if brick.tier == 0 and brick.color == 1 then
-                    x = math.random(10)
+                    x = math.random(4)
                     if x == 1 then
                         brick:hit()
                         table.insert(self.powerups, Powerup(brick.x, brick.y, 1))
@@ -112,10 +112,14 @@ function PlayState:update(dt)
                         brick:hit()
                     end
                 elseif self.gotkey and brick.green then
-                    brick:unlocked()
-                    brick:hit()
+                    self.score = self.score + 200
+                    self.growScore = self.growScore + 200
+                    brick:unlockSingle()
+                    --brick:hit()
                     brick.green = false
                     brick.isLocked = false
+                    gSounds['brick-hit-unlocked']:stop()
+                    gSounds['brick-hit-unlocked']:play()
                 else
                     brick:hit()
                 end
@@ -215,17 +219,25 @@ function PlayState:update(dt)
                     b.dy = math.random(-50, -60)
                     table.insert(self.balls, b)
                 end
+                gSounds['powerup-multi']:stop()
+                gSounds['powerup-multi']:play()
                 self.countBalls = self.countBalls + 2
                 table.remove(self.powerups, k)
             else
-                self.gotkey = true
-                for k, brick in pairs(self.bricks) do
-                    if not brick.green and brick.isLocked then
-                        brick:unlocked()
+                if self.gotkey == false then
+                    for k, brick in pairs(self.bricks) do
+                        if not brick.green and brick.isLocked then
+                            brick:unlocked()
+                        end
+                        brick.green = true
                     end
-                    brick.green = true
                 end
+                self.gotkey = true
+                gSounds['powerup-unlocked']:stop()
+                gSounds['powerup-unlocked']:play()
                 table.remove(self.powerups, k)
+                self.score = self.score + 50
+                self.growScore = self.growScore + 50
             end
         end
     end
@@ -328,6 +340,8 @@ function PlayState:updateGrowScore()
         self.growPoints = math.floor(self.growPoints * 1.25) - math.floor(self.growPoints * 1.25) % 5
         self.growScore = 0
         self.paddle:grow()
+        gSounds['paddle-grow']:stop()
+        gSounds['paddle-grow']:play()
     elseif left <= 0 then
         self.growPoints = math.floor(self.growPoints * 1.25) - math.floor(self.growPoints * 1.25) % 5
         self.growScore = 0

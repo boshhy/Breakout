@@ -112,7 +112,7 @@ function LevelMaker.createMap(level)
                 b.tier = solidTier
             end 
 
-            if math.random(10) == 1 then
+            if math.random(3) == 1 then
                 b.isLocked = true
             end
 
