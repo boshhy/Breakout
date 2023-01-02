@@ -63,7 +63,10 @@ function Brick:init(x, y)
     -- used to determine whether this brick should be rendered
     self.inPlay = true
 
+    -- Used to determined if this brick is locked
     self.isLocked = false
+
+    -- Used to see if after unlocked we have hit brick for first time
     self.green = false
 
     -- particle system belonging to the brick, emitted on hit
@@ -132,21 +135,23 @@ function Brick:hit()
             gSounds['brick-hit-1']:play()
         end
     else
-        -- TODO add locked hit sound
+        -- Play sound if locked brick is hit
         gSounds['brick-locked-hit']:stop()
         gSounds['brick-locked-hit']:play()
     end
 end
 
+-- Used to give bricks particle effects when key powerup is collected
 function Brick:unlocked()
     self.psystem:setColors(0/255, 255/255, 0/255, 
     25/255, 
     0/255, 255/255, 0/255, 0
     )
-    self.psystem:emit(64)
 
+    self.psystem:emit(64)
 end
 
+-- Used to give unlocking a brick particle effects
 function Brick:unlockSingle()
     self.psystem:setColors(0/255, 255/255, 0/255, 
     50/255, 

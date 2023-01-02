@@ -33,6 +33,7 @@ function PlayState:enter(params)
     self.powerups = {}
     self.gotkey = params.gotkey
 
+    -- Used to keep track of paddle grow points
     self.recoverPoints = params.recoverPoints
     self.growPoints = 2000
     self.growScore = params.growScore
@@ -62,9 +63,11 @@ function PlayState:update(dt)
         ball:update(dt)
     end
 
+    -- update power positions based on velocity
     for k, power in pairs(self.powerups) do
         power:update(dt)
     end
+
     for k, ball in pairs(self.balls) do
         if ball:collides(self.paddle) then
             -- raise ball above paddle in case it goes below it, then reverse dy
@@ -88,7 +91,7 @@ function PlayState:update(dt)
         end
     end
 
-    -- detect collision across all bricks with the ball
+    -- detect collision across all bricks with all balls
     for k, ball in pairs(self.balls) do
         for k, brick in pairs(self.bricks) do
 
@@ -112,12 +115,15 @@ function PlayState:update(dt)
                         brick:hit()
                     end
                 elseif self.gotkey and brick.green then
+                    -- Give player extra points for unlocking a brick
                     self.score = self.score + 200
                     self.growScore = self.growScore + 200
+
+                    -- Unlock the brick only if key is already picked up
                     brick:unlockSingle()
-                    --brick:hit()
                     brick.green = false
                     brick.isLocked = false
+
                     gSounds['brick-hit-unlocked']:stop()
                     gSounds['brick-hit-unlocked']:play()
                 else
@@ -125,7 +131,6 @@ function PlayState:update(dt)
                 end
 
                 self:updateGrowScore()
-                
 
                 -- if we have enough points, recover a point of health
                 if self.score > self.recoverPoints then
@@ -208,8 +213,7 @@ function PlayState:update(dt)
 
     for k, power in pairs(self.powerups) do
         if power:collides(self.paddle) then
-            -- TODO fix this
-            -- Need to do this randomly
+            -- Add two balls to the game
             if power.skin == 1 then
                 for i = 1, 2 do
                     b = Ball(math.random(1, 7))
@@ -226,6 +230,7 @@ function PlayState:update(dt)
             else
                 if self.gotkey == false then
                     for k, brick in pairs(self.bricks) do
+                        -- Changed no-green locked to green locked bricks
                         if not brick.green and brick.isLocked then
                             brick:unlocked()
                         end
@@ -243,7 +248,7 @@ function PlayState:update(dt)
     end
     -- if ball goes below bounds, revert to serve state and decrease health
     for k, ball in pairs(self.balls) do
-        -- TODO make sure only one ball is left before executing this
+        -- If last ball goes below bounds, then shrink paddle
         if ball.y >= VIRTUAL_HEIGHT then
             table.remove(self.balls, k)
             self.countBalls = self.countBalls - 1
@@ -327,6 +332,7 @@ function PlayState:checkVictory()
     return true
 end
 
+-- Used to render how many points needed for next paddle growth
 function PlayState:renderGrowScore()
     left = self.growPoints - self.growScore
     love.graphics.setFont(gFonts['small'])
@@ -334,6 +340,7 @@ function PlayState:renderGrowScore()
     love.graphics.printf(tostring(left), 280, 5, 40, 'right')
 end
 
+-- Used to update the score for paddle growth
 function PlayState:updateGrowScore()
     left = self.growPoints - self.growScore
     if left <= 0 and self.paddle.size < 4 then
