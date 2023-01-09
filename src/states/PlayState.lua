@@ -32,10 +32,11 @@ function PlayState:enter(params)
     self.level = params.level
     self.powerups = {}
     self.gotkey = params.gotkey
+    
 
     -- Used to keep track of paddle grow points
     self.recoverPoints = params.recoverPoints
-    self.growPoints = 2000
+    self.growPoints = params.growPoints
     self.growScore = params.growScore
 
     -- give ball random starting velocity
@@ -156,6 +157,7 @@ function PlayState:update(dt)
                         highScores = self.highScores,
                         ball = ball,
                         recoverPoints = self.recoverPoints,
+                        growPoints = self.growPoints,
                         growScore = self.growScore
                     })
                 end
@@ -273,6 +275,7 @@ function PlayState:update(dt)
                         highScores = self.highScores,
                         level = self.level,
                         recoverPoints = self.recoverPoints,
+                        growPoints = self.growPoints,
                         growScore = self.growScore,
                         gotkey = self.gotkey
                     })

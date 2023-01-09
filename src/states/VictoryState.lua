@@ -22,6 +22,7 @@ function VictoryState:enter(params)
     self.ball = params.ball
     self.recoverPoints = params.recoverPoints
     self.growScore = params.growScore
+    self.growPoints = params.growPoints
 end
 
 function VictoryState:update(dt)
@@ -42,6 +43,7 @@ function VictoryState:update(dt)
             highScores = self.highScores,
             recoverPoints = self.recoverPoints,
             growScore = self.growScore,
+            growPoints = self.growPoints,
             gotkey = false
         })
     end

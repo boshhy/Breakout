@@ -27,6 +27,7 @@ function ServeState:enter(params)
     self.recoverPoints = params.recoverPoints
     self.growScore = params.growScore
     self.gotkey = params.gotkey
+    self.growPoints = params.growPoints
 
     -- init new ball (random color for fun)
     self.ball = Ball()
@@ -50,6 +51,7 @@ function ServeState:update(dt)
             ball = self.ball,
             level = self.level,
             recoverPoints = self.recoverPoints,
+            growPoints = self.growPoints,
             growScore = self.growScore,
             gotkey = self.gotkey
         })
