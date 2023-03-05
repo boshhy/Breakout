@@ -105,7 +105,7 @@ function PlayState:update(dt)
 
                     -- trigger the brick's hit function, which removes it from play
                     --if brick.tier == 0 and brick.color == 1 then
-                    x = math.random(4)
+                    x = math.random(10)
                     if x == 1 then
                         brick:hit()
                         table.insert(self.powerups, Powerup(brick.x, brick.y, 1))
